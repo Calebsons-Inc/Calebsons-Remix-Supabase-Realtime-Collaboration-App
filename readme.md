@@ -1,41 +1,39 @@
-# Calebsons Remix + Supabase — Realtime Collaboration App
+# Calebsons Remix — Realtime Collaboration App
 
 ## Overview
-A real-time collaboration app using Remix loaders/actions and Supabase realtime features.
+A real-time collaboration room with accounts, presence, shared editing, and file uploads.
+Open two browsers, sign in as different users, and edit together.
 
 ## Tech Stack
-- Remix
-- Supabase
-- PostgreSQL
+- Remix + Vite
 - TypeScript
+- Cookie sessions (local auth)
+- Server-sent events for realtime sync
+- File uploads to `public/uploads`
 
 ## Features
-- Realtime presence
-- Shared editing
-- File uploads
-- Offline-first sync
-- Auth + RBAC
-
-## Architecture
-```mermaid
-flowchart TD
-    C[Browser - Remix] --> LOADERS[Remix Loaders / Actions]
-    LOADERS --> SUPA[Supabase Backend]
-    SUPA --> DB[Postgres]
-    SUPA --> RT[Realtime Channels]
-    SUPA --> STORAGE[File Storage]
-    C <-- RT --> SUPA
-
-```
+- Sign up / sign in / sign out
+- Live presence across browsers
+- Shared document sync (last-write-wins)
+- File uploads visible to everyone in the room
+- Activity feed
+- Offline queue for document edits (real browser offline)
 
 ## Setup
-    npm install
-    npm run dev
+```bash
+npm install
+npm run dev
+```
 
-## Deployment
-- Fly.io
-- Supabase hosting
+Open [http://localhost:5173](http://localhost:5173).
 
-## Roadmap
-- Add voice rooms
-- Add document versioning
+## Test realtime collaboration
+1. In browser A: create an account (e.g. username `maya`).
+2. In browser B (or a private window): create a different account (e.g. `jordan`).
+3. Both land in `/room` — edit the shared document in either window; the other updates live.
+4. Upload a file in one window — it appears in both.
+
+## Notes
+- Local users and room state persist under `data/`.
+- First account created becomes **Owner**; later accounts are **Editors**.
+- Supabase can replace the local auth/store later; the UI and room flow stay the same.
