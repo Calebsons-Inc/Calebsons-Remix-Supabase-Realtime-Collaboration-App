@@ -1,39 +1,63 @@
 # Calebsons Remix — Realtime Collaboration App
 
 ## Overview
-A real-time collaboration room with accounts, presence, shared editing, and file uploads.
-Open two browsers, sign in as different users, and edit together.
+Remix + local Supabase collaboration app. Week 1 complete: Supabase Auth, spaces, document save, and editor-only writes.
 
 ## Tech Stack
 - Remix + Vite
 - TypeScript
-- Cookie sessions (local auth)
-- Server-sent events for realtime sync
-- File uploads to `public/uploads`
+- Local Supabase (Docker): Auth, Postgres, RLS
+- Username-only sign-in (maps to Supabase email auth under the hood)
 
-## Features
-- Sign up / sign in / sign out
-- Live presence across browsers
-- Shared document sync (last-write-wins)
-- File uploads visible to everyone in the room
-- Activity feed
-- Offline queue for document edits (real browser offline)
+## Week 1 features
+- Sign up / sign in / sign out via Supabase Auth
+- Protected `/spaces` layout
+- Create + list spaces
+- Space detail with document body
+- Save document to Supabase (Owners/Editors only; Viewers read-only)
+- Live document sync + presence via Supabase Realtime
+- SQL migrations: `spaces`, `memberships`, `profiles`, RLS
+
+## Prerequisites
+- Node.js 20+
+- Docker Desktop running
+- npm
 
 ## Setup
+
 ```bash
 npm install
+cp .env.example .env          # first time only
+npm run supabase:start        # Docker must be running
+npm run db:reset              # apply migrations (first time / when schema changes)
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173).
+Open:
+- App: [http://localhost:5173](http://localhost:5173)
+- Supabase Studio: [http://localhost:54323](http://localhost:54323)
+- API: [http://127.0.0.1:54321](http://127.0.0.1:54321)
 
-## Test realtime collaboration
-1. In browser A: create an account (e.g. username `maya`).
-2. In browser B (or a private window): create a different account (e.g. `jordan`).
-3. Both land in `/room` — edit the shared document in either window; the other updates live.
-4. Upload a file in one window — it appears in both.
+## Useful commands
+
+```bash
+npm run supabase:status
+npm run db:migrate          # apply new local migrations (keeps data)
+npm run db:reset            # wipe local DB and re-apply all migrations
+npm run supabase:stop
+```
+
+Do **not** use `npx supabase db push` unless you have linked a cloud project (`supabase link`). Local Docker uses `db:migrate` / `db:reset`.
+
+## Try Week 1
+1. Open the app and create an account (username + display name).
+2. Create a space on `/spaces`.
+3. Open the space and edit the document — it saves to Supabase.
+4. In another browser, create a second user.
+5. As Owner, invite that username from the space sidebar. They can refresh `/spaces` and open it.
 
 ## Notes
-- Local users and room state persist under `data/`.
-- First account created becomes **Owner**; later accounts are **Editors**.
-- Supabase can replace the local auth/store later; the UI and room flow stay the same.
+- Auth is username-only in the UI; credentials are stored in local Supabase Auth.
+- First creator of a space becomes **Owner** (via DB trigger).
+- Realtime presence/sync is Week 2.
+- Local demo keys in `.env.example` are for local use only.

@@ -1,11 +1,8 @@
-# Ignore everything in the repo
-/*
+# Supabase local artifacts
+.branches
+.temp
 
-# Except the .gitignore itself
-!.gitignore
-
-# Except README files
-!README.md
-!README
-!readme.md
-!readme
+# dotenvx
+.env.keys
+.env.local
+.env.*.local

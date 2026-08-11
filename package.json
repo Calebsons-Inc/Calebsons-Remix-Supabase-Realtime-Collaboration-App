@@ -5,12 +5,18 @@
   "scripts": {
     "dev": "remix vite:dev",
     "build": "remix vite:build",
-    "start": "remix-serve ./build/server/index.js"
+    "start": "remix-serve ./build/server/index.js",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:status": "supabase status",
+    "db:reset": "supabase db reset",
+    "db:migrate": "supabase migration up"
   },
   "dependencies": {
     "@remix-run/node": "2.17.5",
     "@remix-run/react": "2.17.5",
     "@remix-run/serve": "2.17.5",
+    "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.112.1",
     "isbot": "^5",
     "react": "^18.3.1",
@@ -20,6 +26,7 @@
     "@remix-run/dev": "^2.17.5",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
+    "supabase": "^2.111.0",
     "typescript": "^5.7.3",
     "vite": "^5.4.14"
   }

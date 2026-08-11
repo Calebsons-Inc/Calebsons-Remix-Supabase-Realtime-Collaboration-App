@@ -1,0 +1,2 @@
+-- Seed data for local Supabase.
+-- Add demo rows here as Week 1 features land.
